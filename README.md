@@ -2,7 +2,7 @@
 
 > A Vue.js project
 
-demo(https://genepan2641.github.io/thef2e-001-todo-list/dist)
+[demo](https://genepan2641.github.io/thef2e-001-todo-list/dist)
 
 ## Build Setup
 
