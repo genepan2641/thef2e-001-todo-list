@@ -15,11 +15,17 @@
         </div>
         <draggable v-model="todos" :options="{draggable: '.todoItem'}">
           <todo-item v-for="(t, i) in filteredTodos" 
+            ref="todoItem"
             @item-completed="itemCompleted"
             @item-stared="itemStared"
+            @item-click-edit="itemClickEdit"
+            @save-edit="saveEdit"
             :is-done="t.isDone"
             :is-critical="t.isCritical"
             :title="t.title"
+            :saved-comment="t.savedComment"
+            :deadline-date="t.deadlineDate"
+            :deadline-time="t.deadlineTime"
             :index="i"
             :key="i">
           </todo-item>
@@ -76,7 +82,9 @@ export default {
         title: this.newTodoTitle || 'Type Something Here...',
         isDone: false,
         isCritical: false,
-        isEdit: false
+        deadlineDate: null,
+        deadlineTime: {hh: '', mm: ''},
+        savedComment: ''
       })
       this.newTodoTitle = '';
     },
@@ -84,17 +92,33 @@ export default {
       this.filter = val;
     },
     itemCompleted(index) {
-      // console.log(val);
       this.$set(this.todos[index], 'isDone', !this.todos[index].isDone);
     },
     itemStared(index) {
       this.$set(this.todos[index], 'isCritical', !this.todos[index].isCritical);
+    },
+    itemClickEdit(index) {
+      this.$refs.todoItem.forEach(ele => {
+        ele.isEdit = false;
+      });
+      this.$refs.todoItem[index].isEdit = true;
+    },
+    saveEdit(payload) {
+      this.todos[payload.index].deadlineDate = payload.date;
+      this.todos[payload.index].deadlineTime = payload.time;
+      this.todos[payload.index].savedComment = payload.comment;
     }
   },
   components: {
     TodoItem,
     draggable
   }
+}
+function _uuid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 </script>
 
@@ -109,6 +133,17 @@ html,
 body {
   margin: 0;
   padding: 0;
+}
+.formControl {
+  height: 34px;
+  border-radius: 0px;
+  outline: none;
+  border: 1px solid #eee;
+  font-size: 16px;
+  padding: 5px 10px;
+}
+.hide {
+  display: none;
 }
 .header {
   background: #4a90e2;
@@ -159,6 +194,7 @@ body {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #ddd;
   opacity: 1; /* Firefox */
+  font-size: 16px;
 }
 .leftWording {
   font-family: "Roboto Italic";
@@ -169,3 +205,5 @@ body {
   padding-bottom: 10px;
 }
 </style>
+
+
