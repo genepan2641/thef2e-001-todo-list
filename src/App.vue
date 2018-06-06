@@ -21,9 +21,11 @@
             @item-stared="itemStared"
             @item-click-edit="itemClickEdit"
             @save-edit="saveEdit"
+            @item-delete="itemDelete"
             :is-done="t.isDone"
             :is-critical="t.isCritical"
             :title="t.title"
+            :hash="t.hash"
             :saved-comment="t.savedComment"
             :deadline-date="t.deadlineDate"
             :deadline-time="t.deadlineTime"
@@ -87,7 +89,8 @@ export default {
         deadlineDate: null,
         deadlineTime: {hh: '', mm: ''},
         savedComment: '',
-        savedFile: null
+        savedFile: null,
+        hash: _uuid()
       })
       this.newTodoTitle = '';
     },
@@ -108,6 +111,14 @@ export default {
         ele.isEdit = false;
       });
       this.$refs.todoItem[index].isEdit = true;
+    },
+    itemDelete(hash) {
+      var targetTodo = this.todos.filter(ele => {
+        return ele.hash == hash;
+      });
+      var index = this.todos.indexOf(targetTodo[0]);
+      // console.log(targetTodo, index);
+      this.todos.splice(index, 1);
     },
     saveEdit(payload) {
       this.todos[payload.index].deadlineDate = payload.date;

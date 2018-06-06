@@ -27,6 +27,7 @@
                   class="todoItem__starFa  fa-star" 
                   :class="[ isCritical ? 'fas todoItem__starFa-isCritical' :'far']"></i>
               <i @click="handleEdit" class="todoItem__editIcon fas fa-pencil-alt"></i>
+              <i @click="handleDelete" class="todoItem__deleteIcon fas fa-times"></i>
           </div>
         </div>
         <div v-show="isEdit" class="todoItem__editSection">
@@ -71,7 +72,8 @@ export default {
     savedFile: {},
     deadlineDate: {type: Date},
     deadlineTime: {type: Object},
-    savedComment: {type: String}
+    savedComment: {type: String},
+    hash: {type: String}
   },
   data() {
     return {
@@ -128,6 +130,9 @@ export default {
         this.cancelEdit();
       }
     },
+    handleDelete() {
+      this.$emit('item-delete', this.hash);
+    },
     cancelEdit() {
       this.isEdit = false;
       this.comment = this.savedComment;
@@ -162,14 +167,20 @@ export default {
 .todoItem {
   width: 100%;
   background: #f2f2f2;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
+  transition: all 0.2s ease-out;
+  border-radius: 5px;
+  box-shadow: 0px 0px 0px transparent;
   &-isCritical {
     background: #fff2dc;
+  }
+  &:hover {
+    box-shadow: 0px 0px 20px -5px #3160ff;
   }
 }
 .todoItem__header {
   display: flex;
-  padding: 10px 0;
+  padding: 15px 0;
 }
 .todoItem__panelContainer {
   flex-basis: 20px;
@@ -230,17 +241,23 @@ export default {
   margin-right: 10px;
 }
 .todoItem__tool {
-  flex: 1;
+  flex: 2;
+  margin-right: 10px;
 }
 .todoItem__starFa {
   cursor: pointer;
-  margin-right: 15px;
+  margin-right: 5px;
   &-isCritical {
     color: #f5a623;
   }
 }
 .todoItem__editIcon {
   cursor: pointer;
+  margin-right: 5px;
+}
+.todoItem__deleteIcon {
+  cursor: pointer;
+  color: #d0021b;
 }
 .todoItem__editSection {
   border-top: 2px solid #c8c8c8;
