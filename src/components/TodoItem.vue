@@ -248,7 +248,9 @@ export default {
 }
 .todoItem__tool {
   flex: 2 1 140px;
-  margin-right: 10px;
+  margin-right: 15px;
+  padding: 5px 0;
+  text-align: right;
 }
 .todoItem__starFa {
   cursor: pointer;
