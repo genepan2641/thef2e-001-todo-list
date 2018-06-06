@@ -228,7 +228,7 @@ export default {
   color: #4a90e2;
 }
 .todoItem__content {
-  flex: 1 0 400px;
+  flex: 1 1 400px;
   margin: 0 10px 0 0;
 }
 .todoItem__title {
@@ -247,7 +247,7 @@ export default {
   margin-right: 10px;
 }
 .todoItem__tool {
-  flex: 2;
+  flex: 2 1 140px;
   margin-right: 10px;
 }
 .todoItem__starFa {
