@@ -16,6 +16,7 @@
         <draggable v-model="todos" :options="{draggable: '.todoItem'}">
           <todo-item v-for="(t, i) in filteredTodos" 
             ref="todoItem"
+            @update-title="updateTitle"
             @item-completed="itemCompleted"
             @item-stared="itemStared"
             @item-click-edit="itemClickEdit"
@@ -26,6 +27,7 @@
             :saved-comment="t.savedComment"
             :deadline-date="t.deadlineDate"
             :deadline-time="t.deadlineTime"
+            :saved-file="t.savedFile"
             :index="i"
             :key="i">
           </todo-item>
@@ -84,9 +86,13 @@ export default {
         isCritical: false,
         deadlineDate: null,
         deadlineTime: {hh: '', mm: ''},
-        savedComment: ''
+        savedComment: '',
+        savedFile: null
       })
       this.newTodoTitle = '';
+    },
+    updateTitle(payload) {
+      this.todos[payload.index].title = payload.newTitle;
     },
     updateFilter(val) {
       this.filter = val;
@@ -106,6 +112,7 @@ export default {
     saveEdit(payload) {
       this.todos[payload.index].deadlineDate = payload.date;
       this.todos[payload.index].deadlineTime = payload.time;
+      this.todos[payload.index].savedFile = payload.file;
       this.todos[payload.index].savedComment = payload.comment;
     }
   },
@@ -134,6 +141,9 @@ body {
   margin: 0;
   padding: 0;
 }
+.w100 {
+  width: 100%;
+}
 .formControl {
   height: 34px;
   border-radius: 0px;
@@ -141,6 +151,9 @@ body {
   border: 1px solid #eee;
   font-size: 16px;
   padding: 5px 10px;
+  &:focus {
+    border-color: #00408b;
+  }
 }
 .hide {
   display: none;

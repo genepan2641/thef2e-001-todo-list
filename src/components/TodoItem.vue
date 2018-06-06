@@ -14,10 +14,11 @@
               <i v-else class="todoItem__boxFa far fa-square"></i>
           </label>
           <div class="todoItem__content">
-              <p class="todoItem__title" :class="{'todoItem__title-isDone': isDone}">{{ title }}</p>
+              <input class="w100 formControl" v-if="showTitleInput" type="text" v-model="newTitle" @blur="leaveTitleInput" @keydown.esc="leaveTitleInput"  @keydown.enter="updateTitle">
+              <p v-else @dblclick="enterTitleInput" class="todoItem__title" :class="{'todoItem__title-isDone': isDone}">{{ title }}</p>
               <div class="todoItem__status">
                   <i v-if="hasSavedDate || hasSavedTime" class="todlItem__statusIcon far fa-calendar-alt"></i>
-                  <i class="todlItem__statusIcon far fa-file"></i>
+                  <i v-if="hasSavedFile" class="todlItem__statusIcon far fa-file"></i>
                   <i v-if="savedComment.trim() != ''" class="todlItem__statusIcon far fa-comment-dots"></i>
               </div>
           </div>
@@ -37,7 +38,8 @@
             </div>
             <div class="editSection__inputGroup">
               <p class="todoItem__subTitle"><i class="far fa-file"></i> File</p>
-              <input class="hide" :id="`fileUpload${index}`" type="file">
+              <input class="hide" @change="processFile($event)" :id="`fileUpload${index}`" type="file">
+              <span v-if="file != null">{{ file.name }}</span>
               <label class="editSection__uploadIcon" :for="`fileUpload${index}`">+</label>
             </div>
             <div class="editSection__inputGroup">
@@ -72,10 +74,13 @@ export default {
   },
   data() {
     return {
+      newTitle: this.title,
       isEdit: false,
       comment: '',
       date: '',
-      time: {hh: '', mm: ''}
+      time: {hh: '', mm: ''},
+      file: {},
+      showTitleInput: false
     }
   },
   created() {
@@ -89,9 +94,26 @@ export default {
     },
     hasSavedDate() {
       return this.deadlineDate != null;
-    }
+    },
+    hasSavedFile() {
+      return this.savedFile != null;
+    },
   },
   methods: {
+    enterTitleInput() {
+      this.showTitleInput = true;
+    },
+    leaveTitleInput() {
+      this.showTitleInput = false;
+      this.newTitle = this.title;
+    },
+    updateTitle() {
+      this.showTitleInput = false;
+      this.$emit('update-title', {
+        newTitle: this.newTitle,
+        index: this.index
+      });
+    },
     handleCheck() {
       this.$emit('item-completed', this.index);
     },
@@ -110,9 +132,13 @@ export default {
       this.comment = this.savedComment;
       this.date = this.deadlineDate;
       this.time = this.deadlineTime;
+      this.file = null;
     },
     selectDate(payload) {
       this.date = payload;
+    },
+    processFile(e) {
+      this.file = e.target.files[0];
     },
     // changeTime(payload) {
     //   this.time = `${payload.data.hh}:${payload.data.mm}`;
@@ -122,6 +148,7 @@ export default {
         date: this.date,
         time: this.time,
         comment: this.comment,
+        file: this.file,
         index: this.index
       });
       this.isEdit = false;
@@ -184,7 +211,7 @@ export default {
 }
 .todoItem__content {
   flex: 1 0 400px;
-  margin: 0;
+  margin: 0 10px 0 0;
 }
 .todoItem__title {
   font-family: "Roboto Medium";
