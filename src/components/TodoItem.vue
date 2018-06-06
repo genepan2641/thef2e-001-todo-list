@@ -68,6 +68,7 @@ export default {
     isCritical: {type: Boolean, default: false},
     title: {type: String, default: ''},
     index: {type: Number},
+    savedFile: {},
     deadlineDate: {type: Date},
     deadlineTime: {type: Object},
     savedComment: {type: String}
@@ -96,7 +97,7 @@ export default {
       return this.deadlineDate != null;
     },
     hasSavedFile() {
-      return this.savedFile != null;
+      return this.savedFile != undefined && this.savedFile.__proto__.constructor == File;
     },
   },
   methods: {
@@ -152,7 +153,7 @@ export default {
         index: this.index
       });
       this.isEdit = false;
-    }
+    },
   }
 }
 
