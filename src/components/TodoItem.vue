@@ -118,14 +118,14 @@ export default {
       });
     },
     handleCheck() {
-      this.$emit('item-completed', this.index);
+      this.$emit('item-completed', this.hash);
     },
     handleStared() {
-      this.$emit('item-stared', this.index);
+      this.$emit('item-stared', this.hash);
     },
     handleEdit() {
       if(!this.isEdit) {
-        this.$emit('item-click-edit', this.index);
+        this.$emit('item-click-edit', this.hash);
       } else {
         this.cancelEdit();
       }
@@ -217,8 +217,10 @@ export default {
 .todoItem__boxFa {
   color: #fff;
   background-color: #fff;
+  font-size: 20px;
 }
 .todoItem__checkFa {
+  font-size: 20px;
   color: #4a90e2;
 }
 .todoItem__content {
@@ -256,8 +258,12 @@ export default {
   margin-right: 5px;
 }
 .todoItem__deleteIcon {
+  transition: all 0.2s ease-out;
   cursor: pointer;
-  color: #d0021b;
+  color: #c8c8c8;
+  &:hover {
+    color: #d0021b;
+  }
 }
 .todoItem__editSection {
   border-top: 2px solid #c8c8c8;

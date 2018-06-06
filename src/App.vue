@@ -13,6 +13,10 @@
         <div class="newTodo">
           <input class="newTodo__input" v-model="newTodoTitle" type="text" @keydown.enter="addTodo" placeholder="＋ Add Task">
         </div>
+        <div class="btnContainer">
+          <button class="btn-primary" @click="clearCompleted">Clear Completed</button>
+          <button class="btn-primary" @click="completeAll">Complete All</button>
+        </div>
         <draggable v-model="todos" :options="{draggable: '.todoItem'}">
           <todo-item v-for="(t, i) in filteredTodos" 
             ref="todoItem"
@@ -94,22 +98,44 @@ export default {
       })
       this.newTodoTitle = '';
     },
+    clearCompleted() {
+      this.todos = this.todos.filter(ele => {
+        return !ele.isDone;
+      });
+    },
+    completeAll() {
+      this.todos.forEach(ele => {
+        ele.isDone = true;
+      });
+    },
     updateTitle(payload) {
       this.todos[payload.index].title = payload.newTitle;
     },
     updateFilter(val) {
       this.filter = val;
     },
-    itemCompleted(index) {
+    itemCompleted(hash) {
+      var targetTodo = this.todos.filter(ele => {
+        return ele.hash == hash;
+      });
+      var index = this.todos.indexOf(targetTodo[0]);
       this.$set(this.todos[index], 'isDone', !this.todos[index].isDone);
     },
-    itemStared(index) {
+    itemStared(hash) {
+      var targetTodo = this.todos.filter(ele => {
+        return ele.hash == hash;
+      });
+      var index = this.todos.indexOf(targetTodo[0]);
       this.$set(this.todos[index], 'isCritical', !this.todos[index].isCritical);
     },
-    itemClickEdit(index) {
+    itemClickEdit(hash) {
       this.$refs.todoItem.forEach(ele => {
         ele.isEdit = false;
       });
+      var targetTodo = this.todos.filter(ele => {
+        return ele.hash == hash;
+      });
+      var index = this.todos.indexOf(targetTodo[0]);
       this.$refs.todoItem[index].isEdit = true;
     },
     itemDelete(hash) {
@@ -117,7 +143,6 @@ export default {
         return ele.hash == hash;
       });
       var index = this.todos.indexOf(targetTodo[0]);
-      // console.log(targetTodo, index);
       this.todos.splice(index, 1);
     },
     saveEdit(payload) {
@@ -164,6 +189,17 @@ body {
   padding: 5px 10px;
   &:focus {
     border-color: #00408b;
+  }
+}
+.btn-primary {
+  background-color: #4a90e2;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  &:hover {
+    background-color: darken(#4a90e2, 10%);
   }
 }
 .hide {
@@ -213,6 +249,10 @@ body {
   &:focus {
     border: 1px solid #00408b;
   }
+}
+.btnContainer {
+  margin-bottom: 15px;
+  text-align: right;
 }
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
