@@ -17,7 +17,7 @@
               <input class="w100 formControl" v-if="showTitleInput" type="text" v-model="newTitle" @blur="leaveTitleInput" @keydown.esc="leaveTitleInput"  @keydown.enter="updateTitle">
               <p v-else @dblclick="enterTitleInput" class="todoItem__title" :class="{'todoItem__title-isDone': isDone}">{{ title }}</p>
               <div class="todoItem__status">
-                  <i v-if="hasSavedDate || hasSavedTime" class="todlItem__statusIcon far fa-calendar-alt"></i>
+                  <span v-if="hasSavedDate || hasSavedTime"><i class="todlItem__statusIcon far fa-calendar-alt"></i><span class="font-sm">{{ displayDate }}</span></span>
                   <i v-if="hasSavedFile" class="todlItem__statusIcon far fa-file"></i>
                   <i v-if="savedComment.trim() != ''" class="todlItem__statusIcon far fa-comment-dots"></i>
               </div>
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import DatePicker from 'vuejs-datepicker';
 import VueTimepicker from 'vue2-timepicker';
 export default {
@@ -101,6 +102,9 @@ export default {
     hasSavedFile() {
       return this.savedFile != undefined && this.savedFile.__proto__.constructor == File;
     },
+    displayDate() {
+      return moment(this.deadlineDate).format('YYYY-MM-DD');
+    }
   },
   methods: {
     enterTitleInput() {
@@ -113,7 +117,7 @@ export default {
     updateTitle() {
       this.showTitleInput = false;
       this.$emit('update-title', {
-        newTitle: this.newTitle,
+        newTitle: this.newTitle || 'type something here..',
         index: this.index
       });
     },

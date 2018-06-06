@@ -180,6 +180,9 @@ body {
 .w100 {
   width: 100%;
 }
+.font-sm {
+  font-size: 12px;
+}
 .formControl {
   height: 34px;
   border-radius: 0px;
