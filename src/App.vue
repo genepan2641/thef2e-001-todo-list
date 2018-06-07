@@ -127,6 +127,9 @@ export default {
       });
       var index = this.todos.indexOf(targetTodo[0]);
       this.$set(this.todos[index], 'isCritical', !this.todos[index].isCritical);
+      this.todos.sort((a, b) => {
+        return a.isCritical ? -1 : 1;
+      });
     },
     itemClickEdit(hash) {
       this.$refs.todoItem.forEach(ele => {
